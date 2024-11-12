@@ -11,7 +11,12 @@ class apiController extends Controller {
         $this->userdataRepository = new userDataRepository();
         $this->historyRepository  = new historyRepository();
 
-        $token = $_COOKIE['token'] ?? null;
+        $headers = getallheaders();
+        $token = null;
+
+        if (isset($headers['Authorization'])) {
+            $token = str_replace('Bearer ', '', $headers['Authorization']);
+        }
 
         if($token == null)
             $this->responseJsonData("Api yêu cầu đăng nhập", 401);
