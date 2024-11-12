@@ -2,10 +2,10 @@ name: Dockerfile
 
 on:
   push:
-    branches: [back-end]
+    branches: [main]
     paths-ignore:
       - readme.md
-      - .github/workflows/**
+      # - .github/workflows/**
 
 jobs:
   build:
@@ -54,7 +54,5 @@ jobs:
       - name: Push Docker image
         run: |
           docker push lmao1415/ltw
-                  "docker": true
-                }'
       
 
