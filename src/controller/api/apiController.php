@@ -11,12 +11,21 @@ class apiController extends Controller {
         $this->userdataRepository = new userDataRepository();
         $this->historyRepository  = new historyRepository();
 
-        $token = $_COOKIE['token'] ?? null;
+        $headers = getallheaders();
+        $token = null;
 
-        if($token == null)
-            $this->responseJsonData("Api yêu cầu đăng nhập", 401);
+        if (isset($headers['Authorization'])) {
+            $token = str_replace('Bearer ', '', $headers['Authorization']);
+        }
 
-        $decoded = jwtService::validateToken($_COOKIE['token']);
+        if($token == null) {
+            $token = $_COOKIE['token'];
+
+            if($token == NULL)
+                $this->responseJsonData("Api yêu cầu đăng nhập", 401);
+        }
+
+        $decoded = jwtService::validateToken($token);
 
         $_SESSION['username'] = $decoded->sub;
     }
