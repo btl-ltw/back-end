@@ -18,10 +18,14 @@ class apiController extends Controller {
             $token = str_replace('Bearer ', '', $headers['Authorization']);
         }
 
-        if($token == null)
-            $this->responseJsonData("Api yêu cầu đăng nhập", 401);
+        if($token == null) {
+            $token = $_COOKIE['token'];
 
-        $decoded = jwtService::validateToken($_COOKIE['token']);
+            if($token == NULL)
+                $this->responseJsonData("Api yêu cầu đăng nhập", 401);
+        }
+
+        $decoded = jwtService::validateToken($token);
 
         $_SESSION['username'] = $decoded->sub;
     }
