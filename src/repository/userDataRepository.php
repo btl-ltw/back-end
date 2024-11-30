@@ -51,7 +51,7 @@ class userDataRepository extends userDataDataBaseRepository {
             WHERE username = '$username'
         ";
 
-        return $this->getDataFromResult($this->queryExecutor($sql));
+        return $this->getDataFromResult($this->queryExecutor($sql))[0];
     }
 
     public function getAllUserInfo($offset) {
