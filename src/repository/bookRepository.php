@@ -29,4 +29,42 @@ class bookRepository extends bookDataBaseRepository {
 
         $this->queryExecutor($sql);
     }
+
+    public function getBook($category) {
+        $sql = null;
+
+        if($category) {
+            $sql = "
+                SELECT * FROM `book` 
+                WHERE category = '$category'
+            ";
+        }
+
+        else {
+            $sql = "
+                SELECT * FROM `book` 
+            ";
+        }
+
+        return $this->getDataFromResult($this->queryExecutor($sql));
+    }
+
+    public function getChapter($book_id, $chapter) {
+        $sql = null;
+
+        if($chapter) {
+            $sql = "
+                SELECT * FROM chapter a
+                WHERE a.book_id = '$book_id' AND a.chapter_num = '$chapter'
+            ";
+        }
+        else {
+            $sql = "
+                SELECT * FROM chapter a
+                WHERE a.book_id = '$book_id' 
+            ";
+        }
+
+        return $this->getDataFromResult($this->queryExecutor($sql));
+    }
 }

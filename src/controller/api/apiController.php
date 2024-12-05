@@ -4,12 +4,14 @@ class apiController extends Controller {
     protected userDataRepository $userdataRepository;
     protected userInfoRepository $userInfoRepository;
     protected historyRepository $historyRepository;
+    protected bookRepository $bookRepository;
 
     public function __construct() {
         parent::__construct();
         $this->userInfoRepository = new userInfoRepository();
         $this->userdataRepository = new userDataRepository();
         $this->historyRepository  = new historyRepository();
+        $this->bookRepository = new bookRepository();
 
         $headers = getallheaders();
         $token = null;
