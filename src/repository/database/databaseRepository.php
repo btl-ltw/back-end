@@ -15,7 +15,7 @@ class databaseRepository {
 
         try {
             $this->conn = new mysqli();
-            $this->conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 1);
+            $this->conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 10);
             $this->conn->real_connect($this->servername, $this->username, $this->password, $this->dbname);
         } catch (Exception $e) {
             throw new Exception("Không thể kết nối db, " . $e->getMessage());

@@ -5,7 +5,7 @@ class getChaperFromBookController extends apiController {
         $chapter = $_GET['chapter'] ?? null;
         $book_id = $_GET['book_id'];
 
-        $data = $this->bookRepository->getChapter($book_id, $chapter);
+        $data = $this->bookRepository->getChapter($book_id, $chapter, $_SESSION['username']);
 
         $this->responseJsonData($data);
     }
