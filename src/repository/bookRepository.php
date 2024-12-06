@@ -217,4 +217,43 @@ class bookRepository extends bookDataBaseRepository {
         }
 
     }
+
+    public function deleteBookById($id) {
+        $sql = "
+            DELETE FROM book
+            WHERE id = ?
+        ";
+
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("i", $id);
+
+            $stmt->execute();
+
+            if (!$stmt->affected_rows > 0) {
+                Throw new Exception("Query không ảnh hưởng đến bất kì hàng nào của table");
+            }
+        } else {
+            throw new Exception("Error: " . $this->conn->error);
+        }
+    }
+
+    public function deleteChapter($id) {
+        $sql = "
+            DELETE FROM chapter
+            WHERE id = ?
+        ";
+
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("i", $id);
+
+            $stmt->execute();
+
+            if (!$stmt->affected_rows > 0) {
+                Throw new Exception("Query không ảnh hưởng đến bất kì hàng nào của table");
+            }
+        } else {
+            throw new Exception("Error: " . $this->conn->error);
+        }
+
+    }
 }
