@@ -28,8 +28,7 @@ class bookRepository extends bookDataBaseRepository {
         ";
 
         if ($stmt = $this->conn->prepare($sql)) {
-            // Gắn giá trị vào các placeholder
-            $stmt->bind_param("ibssi", $data['book_id'], $data['file_url'], $data['chapter_name'], $data['chapter_num'], $data['price']);  // "i" cho book_id (integer), "s" cho file_url, chapter_name, chapter_num (string), "d" cho price (double)
+            $stmt->bind_param("isssi", $data['book_id'], $data['file_url'], $data['chapter_name'], $data['chapter_num'], $data['price']);
 
             if (!$stmt->execute()) {
                 throw new Exception("Error: " . $stmt->error);
