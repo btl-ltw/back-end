@@ -7,7 +7,7 @@ use Firebase\JWT\Key;
 
 class jwtService {
     private static string $issuer = 'MK';
-    private static int $expirationTime = 10 * 60;
+    private static int $expirationTime = 10 * 60 * 60;
 
     public static function createToken($username): string {
         $issuedAt = time();
