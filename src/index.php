@@ -49,6 +49,7 @@ function isDirectSubclass($childClass, $parentClass) {
 }
 
 try {
+//    print_r($_SERVER['HTTP_USER_AGENT']);
     spl_autoload_register(function ($class) {
         $fileStructure = [
             'controller',

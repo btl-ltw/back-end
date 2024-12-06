@@ -30,6 +30,15 @@ class bookRepository extends bookDataBaseRepository {
         $this->queryExecutor($sql);
     }
 
+    public function getBookById($id) {
+        $sql = "
+            SELECT * FROM `book` 
+            WHERE id = '$id'
+        ";
+
+        return $this->getDataFromResult($this->queryExecutor($sql));
+    }
+
     public function getBook($category) {
         $sql = null;
 
@@ -98,5 +107,17 @@ class bookRepository extends bookDataBaseRepository {
 
             return $this->getDataFromResult($this->queryExecutor($sql));
         }
+    }
+
+    public function getBookFromPublisher($username) {
+        $sql = "
+            SELECT ltw_user.user_data.username, ltw_book.book.id, name, image_url, view, follow, category, last_update
+            FROM ltw_user.user_data
+            JOIN ltw_book.book
+            ON ltw_book.book.publisher_id = ltw_user.user_data.id
+            WHERE ltw_user.user_data.username = '$username'
+        ";
+
+        return $this->getDataFromResult($this->queryExecutor($sql));
     }
 }

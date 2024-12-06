@@ -4,31 +4,65 @@ class userInfoRepository extends userDataDataBaseRepository {
     public function save($id, $displayName) {
         $sql = "
             INSERT INTO user_info (user_id, display_name)
-            VALUES ('$id', '$displayName')
+            VALUES (?, ?)
         ";
 
-        $this->queryExecutor($sql);
+        if ($stmt = $this->conn->prepare($sql)) {
+            // Gắn giá trị vào các placeholder
+            $stmt->bind_param("is", $id, $displayName);  // "i" cho id (integer), "s" cho display_name (string)
+
+            if (!$stmt->execute()) {
+                throw new Exception("Error: " . $stmt->error);
+            }
+
+            $stmt->close();
+        } else {
+            throw new Exception("Error: " . $this->conn->error);
+        }
     }
 
     public function updateDisplayName($id, $displayName) {
         $sql = "
             UPDATE user_info
-            SET display_name = '$displayName'
-            WHERE user_id = '$id'
+            SET display_name = ?
+            WHERE user_id = ?
         ";
 
-        $this->queryExecutor($sql);
+        if ($stmt = $this->conn->prepare($sql)) {
+            // Gắn giá trị vào các placeholder (display_name và user_id)
+            $stmt->bind_param("si", $displayName, $id);  // "s" cho display_name (string), "i" cho id (integer)
+
+            if (!$stmt->execute()) {
+                throw new Exception("Error: " . $stmt->error);
+            }
+
+            $stmt->close();
+        } else {
+            throw new Exception("Error: " . $this->conn->error);
+        }
     }
 
     public function existById($id) {
         $sql = "
             SELECT * FROM user_info
-            WHERE user_id = '$id'
+            WHERE user_id = ?
         ";
 
-        $result = $this->getDataFromResult($this->queryExecutor($sql));
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("i", $id);
 
-        return $result;
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            $data = $result->fetch_all(MYSQLI_ASSOC);
+
+            $stmt->close();
+
+            return $data;
+        } else {
+            throw new Exception("Error: " . $this->conn->error);
+        }
     }
 
     public function getUserInfo($username) {
@@ -37,10 +71,24 @@ class userInfoRepository extends userDataDataBaseRepository {
             FROM user_data
             INNER JOIN user_info
             ON user_data.id = user_info.user_id
-            WHERE username = '$username'
+            WHERE username = ?
         ";
 
-        return $this->getDataFromResult($this->queryExecutor($sql));
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("s", $username);
+
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            $data = $result->fetch_all(MYSQLI_ASSOC);
+
+            $stmt->close();
+
+            return $data;
+        } else {
+            throw new Exception("Error: " . $this->conn->error);
+        }
     }
 
     public function updateCredits($username, $amount) {
@@ -48,10 +96,20 @@ class userInfoRepository extends userDataDataBaseRepository {
             UPDATE user_info as ui
             JOIN user_data
             ON user_data.id = ui.user_id
-            SET credits = ui.credits + '$amount'
-            WHERE username = '$username'
+            SET credits = ui.credits + ?
+            WHERE username = ?
         ";
 
-        $this->queryExecutor($sql);
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("ds", $amount, $username);
+
+            if (!$stmt->execute()) {
+                throw new Exception("Error: " . $stmt->error);
+            }
+
+            $stmt->close();
+        } else {
+            throw new Exception("Error: " . $this->conn->error);
+        }
     }
 }
