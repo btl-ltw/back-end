@@ -106,6 +106,9 @@ class bookRepository extends bookDataBaseRepository {
                 $stmt->execute();
                 $data = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
+                if($data[0]['price'] == 0)
+                    return $data;
+
                 // Câu lệnh thứ hai để lấy credits của người dùng
                 $sql2 = "
                     SELECT credits FROM ltw_user.user_data
@@ -262,5 +265,36 @@ class bookRepository extends bookDataBaseRepository {
             throw new Exception("Error: " . $this->conn->error);
         }
 
+    }
+
+    public function addComment($username, $book_id, $content) {
+        $sql = "
+            INSERT INTO comment (username, book_id, content)
+            VALUES ('$username', $book_id, '$content')
+        ";
+
+        $this->queryExecutor($sql);
+    }
+
+    public function getComment($book_id, $offset) {
+        $offset = $offset * 5 ?? 0;
+
+        $sql = "
+            SELECT * FROM comment
+            WHERE book_id = '$book_id'
+            ORDER BY cmt_date DESC
+            LIMIT 5 OFFSET $offset
+        ";
+
+        return $this->getDataFromResult($this->queryExecutor($sql));
+    }
+
+    public function deleteComment($id) {
+        $sql = "
+            DELETE FROM comment
+            WHERE id = $id
+        ";
+
+        $this->queryExecutor($sql);
     }
 }
