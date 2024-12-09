@@ -150,7 +150,7 @@ class bookRepository extends bookDataBaseRepository {
                 $sql4 = "
                     UPDATE book
                     SET view = view + 1
-                    WHERE id = '$chapter'
+                    WHERE id = '$book_id'
                 ";
 
                 $this->queryExecutor($sql4);
