@@ -147,6 +147,14 @@ class bookRepository extends bookDataBaseRepository {
                     throw new Exception("Error: " . $this->conn->error);
                 }
 
+                $sql4 = "
+                    UPDATE book
+                    SET view = view + 1
+                    WHERE id = '$chapter'
+                ";
+
+                $this->queryExecutor($sql4);
+
                 return $data;  // Trả về dữ liệu chapter đã chọn
             } else {
                 throw new Exception("Error: " . $this->conn->error);
