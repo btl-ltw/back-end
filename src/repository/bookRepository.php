@@ -106,6 +106,14 @@ class bookRepository extends bookDataBaseRepository {
                 $stmt->execute();
                 $data = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
+                $sql4 = "
+                    UPDATE book
+                    SET view = view + 1
+                    WHERE id = '$book_id'
+                ";
+
+                $this->queryExecutor($sql4);
+
                 if($data[0]['price'] == 0)
                     return $data;
 
@@ -149,14 +157,6 @@ class bookRepository extends bookDataBaseRepository {
                 } else {
                     throw new Exception("Error: " . $this->conn->error);
                 }
-
-                $sql4 = "
-                    UPDATE book
-                    SET view = view + 1
-                    WHERE id = '$book_id'
-                ";
-
-                $this->queryExecutor($sql4);
 
                 return $data;  // Trả về dữ liệu chapter đã chọn
             } else {
