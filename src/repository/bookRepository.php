@@ -297,4 +297,44 @@ class bookRepository extends bookDataBaseRepository {
 
         $this->queryExecutor($sql);
     }
+
+    public function followABook($username, $book_id) {
+        $sql = "
+        INSERT INTO follow (username, book_id)
+        VALUES ('$username', '$book_id')
+        ";
+
+        $this->queryExecutor($sql);
+    }
+
+    public function getAllMyFollowedBooks($username) {
+        $sql = "
+            SELECT * FROM follow
+            JOIN book
+            ON book.id = follow.book_id
+            WHERE username = '$username'
+        ";
+
+        return $this->getDataFromResult($this->queryExecutor($sql));
+    }
+
+    public function checkFollow($username, $book_id) {
+        $sql = "
+            SELECT EXISTS (
+                SELECT 1 FROM follow
+                WHERE username = '$username' AND book_id = $book_id
+            ) AS is_exists
+        ";
+
+        return $this->getDataFromResult($this->queryExecutor($sql))[0];
+    }
+
+    public function cancelFollowABook($username, $book_id) {
+        $sql = "
+            DELETE FROM follow
+            WHERE username = '$username' AND book_id = $book_id
+        ";
+
+        $this->queryExecutor($sql);
+    }
 }
