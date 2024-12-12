@@ -7,10 +7,12 @@ class followController extends apiController {
 
         if($book_id) {
             $this->bookRepository->checkFollow($username, $book_id);
+
             $this->responseJsonData($this->bookRepository->checkFollow($username, $book_id)['is_exists'] == 0 ? false : true);
         }
 
-        $this->responseJsonData($this->bookRepository->getAllMyFollowedBooks($username));
+        $data = $this->bookRepository->getAllMyFollowedBooks($username);
+        $this->responseJsonData(count($data) ? $data : null);
     }
 
     public function POST() {

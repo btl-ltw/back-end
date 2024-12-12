@@ -274,42 +274,85 @@ class bookRepository extends bookDataBaseRepository {
 
     public function addComment($username, $book_id, $content) {
         $sql = "
-            INSERT INTO comment (username, book_id, content)
-            VALUES ('$username', $book_id, '$content')
-        ";
+        INSERT INTO comment (username, book_id, content)
+        VALUES (?, ?, ?)
+    ";
 
-        $this->queryExecutor($sql);
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("sis", $username, $book_id, $content);
+
+            if (!$stmt->execute()) {
+                throw new Exception("Error executing query: " . $stmt->error);
+            }
+
+            $stmt->close();
+        } else {
+            throw new Exception("Error preparing query: " . $this->conn->error);
+        }
     }
 
     public function getComment($book_id, $offset) {
-        $offset = $offset * 5 ?? 0;
+        $offset = isset($offset) ? $offset * 5 : 0;
 
         $sql = "
-            SELECT * FROM comment
-            WHERE book_id = '$book_id'
-            ORDER BY cmt_date DESC
-            LIMIT 5 OFFSET $offset
-        ";
+        SELECT * FROM comment
+        WHERE book_id = ?
+        ORDER BY cmt_date DESC
+        LIMIT 5 OFFSET ?
+    ";
 
-        return $this->getDataFromResult($this->queryExecutor($sql));
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("si", $book_id, $offset);
+
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                $data = $result->fetch_all(MYSQLI_ASSOC);
+                $stmt->close();
+                return $data;
+            } else {
+                throw new Exception("Error executing query: " . $stmt->error);
+            }
+        } else {
+            throw new Exception("Error preparing query: " . $this->conn->error);
+        }
     }
 
     public function deleteComment($id) {
         $sql = "
-            DELETE FROM comment
-            WHERE id = $id
-        ";
+        DELETE FROM comment
+        WHERE id = ?
+    ";
 
-        $this->queryExecutor($sql);
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("i", $id); // "i" cho số nguyên (integer)
+
+            if (!$stmt->execute()) {
+                throw new Exception("Error executing query: " . $stmt->error);
+            }
+
+            $stmt->close();
+        } else {
+            throw new Exception("Error preparing query: " . $this->conn->error);
+        }
     }
 
     public function followABook($username, $book_id) {
         $sql = "
         INSERT INTO follow (username, book_id)
-        VALUES ('$username', '$book_id')
-        ";
+        VALUES (?, ?)
+    ";
 
-        $this->queryExecutor($sql);
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("si", $username, $book_id);
+
+            if (!$stmt->execute()) {
+                throw new Exception("Error executing query: " . $stmt->error);
+            }
+
+            $stmt->close();
+        } else {
+            throw new Exception("Error preparing query: " . $this->conn->error);
+        }
     }
 
     public function getAllMyFollowedBooks($username) {
@@ -317,60 +360,134 @@ class bookRepository extends bookDataBaseRepository {
             SELECT * FROM follow
             JOIN book
             ON book.id = follow.book_id
-            WHERE username = '$username'
+            WHERE username = ?
         ";
 
-        return $this->getDataFromResult($this->queryExecutor($sql));
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("s", $username);
+
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                $data = $result->fetch_all(MYSQLI_ASSOC);
+                $stmt->close();
+                return $data;
+            } else {
+                throw new Exception("Error executing query: " . $stmt->error);
+            }
+        } else {
+            throw new Exception("Error preparing query: " . $this->conn->error);
+        }
     }
 
     public function checkFollow($username, $book_id) {
         $sql = "
-            SELECT EXISTS (
-                SELECT 1 FROM follow
-                WHERE username = '$username' AND book_id = $book_id
-            ) AS is_exists
-        ";
+        SELECT EXISTS (
+            SELECT 1 FROM follow
+            WHERE username = ? AND book_id = ?
+        ) AS is_exists
+    ";
 
-        return $this->getDataFromResult($this->queryExecutor($sql))[0];
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("si", $username, $book_id);
+
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                $data = $result->fetch_assoc();
+                $stmt->close();
+                return $data;
+            } else {
+                throw new Exception("Error executing query: " . $stmt->error);
+            }
+        } else {
+            throw new Exception("Error preparing query: " . $this->conn->error);
+        }
     }
 
     public function cancelFollowABook($username, $book_id) {
         $sql = "
-            DELETE FROM follow
-            WHERE username = '$username' AND book_id = $book_id
-        ";
+        DELETE FROM follow
+        WHERE username = ? AND book_id = ?
+    ";
 
-        $this->queryExecutor($sql);
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("si", $username, $book_id); // "s" cho chuỗi, "i" cho số nguyên
+
+            if (!$stmt->execute()) {
+                throw new Exception("Error executing query: " . $stmt->error);
+            }
+
+            $stmt->close();
+        } else {
+            throw new Exception("Error preparing query: " . $this->conn->error);
+        }
     }
 
     public function getAllCategory() {
         $sql = "
-            SELECT category, COUNT(category) as nums_of_books from book
-            GROUP BY category
-            ORDER BY category ASC
-        ";
+        SELECT category, COUNT(category) AS nums_of_books
+        FROM book
+        GROUP BY category
+        ORDER BY category ASC
+    ";
 
-        return $this->getDataFromResult($this->queryExecutor($sql));
+        if ($stmt = $this->conn->prepare($sql)) {
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                $data = $result->fetch_all(MYSQLI_ASSOC);
+                $stmt->close();
+                return $data;
+            } else {
+                throw new Exception("Error executing query: " . $stmt->error);
+            }
+        } else {
+            throw new Exception("Error preparing query: " . $this->conn->error);
+        }
     }
 
     public function getBookWithCategory($cate) {
         $sql = "
-            SELECT * FROM `book` 
-            WHERE category = '$cate' 
-        ";
+        SELECT * FROM `book` 
+        WHERE `category` = ?
+    ";
 
-        return $this->getDataFromResult($this->queryExecutor($sql));
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("s", $cate);
+
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                $data = $result->fetch_all(MYSQLI_ASSOC);
+                $stmt->close();
+                return $data;
+            } else {
+                throw new Exception("Error: " . $stmt->error);
+            }
+        } else {
+            throw new Exception("Error: " . $this->conn->error);
+        }
     }
 
     public function searchBook($key) {
         $sql = "
-            SELECT * FROM `book` 
-            WHERE `name` LIKE '%$key%'
-            UNION ALL
-            SELECT * FROM `book`
-            WHERE category LIKE '$key'
-        ";
+        SELECT * FROM `book` 
+        WHERE `name` LIKE CONCAT('%', ?, '%')
+        UNION ALL
+        SELECT * FROM `book`
+        WHERE `category` LIKE ?
+    ";
 
-        return $this->getDataFromResult($this->queryExecutor($sql));
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("ss", $key, $key);
+
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                $data = $result->fetch_all(MYSQLI_ASSOC);
+                $stmt->close();
+                return $data;
+            } else {
+                throw new Exception("Error: " . $stmt->error);
+            }
+        } else {
+            throw new Exception("Error: " . $this->conn->error);
+        }
     }
 }

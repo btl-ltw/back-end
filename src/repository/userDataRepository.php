@@ -88,6 +88,28 @@ class userDataRepository extends userDataDataBaseRepository {
         }
     }
 
+    public function updateAvatar($username, $url) {
+        $sql = "
+            UPDATE user_info
+            JOIN user_data
+            ON user_info.user_id = user_data.id
+            SET user_info.img_url = ?
+            WHERE user_data.username = ?;
+        ";
+
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("ss", $url, $username);
+
+            if (!$stmt->execute()) {
+                throw new Exception("Error: " . $stmt->error);
+            }
+
+            $stmt->close();
+        } else {
+            throw new Exception("Error: " . $this->conn->error);
+        }
+    }
+
     public function getIdByUsername($username) {
         $sql = "
         SELECT id FROM user_data
@@ -197,11 +219,22 @@ class userDataRepository extends userDataDataBaseRepository {
 
     public function successLogin($username) {
         $sql = "
-            UPDATE user_data
-            SET time_allow = 5
-            WHERE username = '$username'
-        ";
+        UPDATE user_data
+        SET time_allow = 5
+        WHERE username = ?
+    ";
 
-        $this->queryExecutor($sql);
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("s", $username);
+
+            if (!$stmt->execute()) {
+                throw new Exception("Error: " . $stmt->error);
+            }
+
+            $stmt->close();
+        } else {
+            throw new Exception("Error: " . $this->conn->error);
+        }
     }
+
 }
