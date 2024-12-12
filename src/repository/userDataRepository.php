@@ -124,6 +124,7 @@ class userDataRepository extends userDataDataBaseRepository {
             FROM user_data
             JOIN user_info
             ON user_data.id = user_info.user_id
+            WHERE role IS NULL OR role NOT IN ('manager')
             LIMIT 10 OFFSET ?
         ";
 
