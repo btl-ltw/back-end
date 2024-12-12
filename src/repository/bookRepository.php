@@ -61,7 +61,8 @@ class bookRepository extends bookDataBaseRepository {
         }
     }
 
-    public function getBook($category) {
+    public function getBook($category, $offset) {
+        $offset = $offset * 20 ?? 0;
         $sql = null;
 
         if ($category) {
@@ -69,6 +70,7 @@ class bookRepository extends bookDataBaseRepository {
                 SELECT * FROM `book` 
                 WHERE category = ?
                 ORDER BY last_update DESC
+                LIMIT 20 OFFSET $offset
             ";
 
             if ($stmt = $this->conn->prepare($sql)) {
@@ -85,6 +87,7 @@ class bookRepository extends bookDataBaseRepository {
             $sql = "
                 SELECT * FROM `book`
                 ORDER BY last_update DESC
+                LIMIT 20 OFFSET $offset
             ";
 
             $result = $this->queryExecutor($sql);
