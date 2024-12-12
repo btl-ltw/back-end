@@ -337,4 +337,23 @@ class bookRepository extends bookDataBaseRepository {
 
         $this->queryExecutor($sql);
     }
+
+    public function getAllCategory() {
+        $sql = "
+            SELECT category, COUNT(category) as nums_of_books from book
+            GROUP BY category
+            ORDER BY category ASC
+        ";
+
+        return $this->getDataFromResult($this->queryExecutor($sql));
+    }
+
+    public function getBookWithCategory($cate) {
+        $sql = "
+            SELECT * FROM `book` 
+            WHERE category = '$cate' 
+        ";
+
+        return $this->getDataFromResult($this->queryExecutor($sql));
+    }
 }
