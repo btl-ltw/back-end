@@ -356,4 +356,16 @@ class bookRepository extends bookDataBaseRepository {
 
         return $this->getDataFromResult($this->queryExecutor($sql));
     }
+
+    public function searchBook($key) {
+        $sql = "
+            SELECT * FROM `book` 
+            WHERE `name` LIKE '%$key%'
+            UNION ALL
+            SELECT * FROM `book`
+            WHERE category LIKE '$key'
+        ";
+
+        return $this->getDataFromResult($this->queryExecutor($sql));
+    }
 }
