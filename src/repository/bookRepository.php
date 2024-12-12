@@ -68,6 +68,7 @@ class bookRepository extends bookDataBaseRepository {
             $sql = "
                 SELECT * FROM `book` 
                 WHERE category = ?
+                ORDER BY last_update DESC
             ";
 
             if ($stmt = $this->conn->prepare($sql)) {
@@ -83,6 +84,7 @@ class bookRepository extends bookDataBaseRepository {
         } else {
             $sql = "
                 SELECT * FROM `book`
+                ORDER BY last_update DESC
             ";
 
             $result = $this->queryExecutor($sql);
