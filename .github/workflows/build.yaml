@@ -25,18 +25,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-
 
-      - name: create .env
-        run: |
-          touch .env
-          echo 'BOOK_DB=${{ secrets.BOOK_DB }}' >> .env
-          echo 'USER_DB=${{ secrets.USER_DB }}' >> .env 
-          echo 'HISTORY_DB=${{ secrets.HISTORY_DB }}' >> .env 
-          echo 'USER=${{ secrets.USER }}' >> .env 
-          echo 'PASSWD=${{ secrets.PASSWD }}' >> .env 
-          echo 'IP=${{ secrets.IP }}' >> .env 
-          echo 'PORT=${{ secrets.PORT }}' >> .env 
-          echo 'JWT_SECRET=${{ secrets.JWT_SECRET }}' >> .env 
-
       - name: check directory
         run: |
           ls -a
