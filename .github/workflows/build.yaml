@@ -41,6 +41,6 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push lmao1415/ltw
+          docker push lmao1415/ltw:backend
       
 
