@@ -8,8 +8,6 @@
 </div>
 
 ## URL Dự án
-- https://github.com/btl-ltw/back-end/releases/download/v1.0/Software.zip
-- https://github.com/btl-ltw/back-end/releases/download/v1.0/Software.zip
 
 ## Cách biên dịch dự án
 #### Yêu cầu:
